@@ -26,6 +26,13 @@ Each phase lives in its own folder (`00-setup/`, `01-python-for-ai/`, ...) with:
 - code + tests
 - a `README.md` explaining what I built and what I learned
 
+## Run it
+
+```bash
+uv sync               # install exact deps from uv.lock
+uv run pytest         # run all tests
+```
+
 ## Stack
 
 Python 3.12 · uv · PyTorch · Hugging Face · Claude API

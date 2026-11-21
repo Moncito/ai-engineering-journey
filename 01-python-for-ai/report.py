@@ -13,6 +13,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")  # render to files, no window needed
+import matplotlib.pyplot as plt  # noqa: E402, F401  (you'll use it)
 import pandas as pd  # noqa: E402
 from analysis import clean, daily_cost, load_requests  # noqa: E402
 

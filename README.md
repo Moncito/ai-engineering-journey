@@ -6,8 +6,8 @@ My path from software engineer to AI engineer: every concept learned by building
 
 | Phase | Topic | Status |
 |---|---|---|
-| 00 | Setup & tooling (uv, git, notebooks, `.env`) | 🚧 In progress |
-| 01 | Python for AI (numpy, pandas, plotting) | ⬜ |
+| 00 | [Setup & tooling](00-setup/) (uv, git, notebooks, `.env`) | ✅ Done |
+| 01 | [Python for AI](01-python-for-ai/) (numpy, pandas, plotting) | 🚧 In progress |
 | 02 | Math for ML (vectors, matrices, gradients, probability) | ⬜ |
 | 03 | Classic ML (scikit-learn, evaluation) | ⬜ |
 | 04 | Deep learning (PyTorch, NN from scratch, CNNs) | ⬜ |

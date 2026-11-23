@@ -1,18 +1,5 @@
-"""Phase 01 · Part A: vectors with numpy.
 
-Every LLM, embedding model, and neural net is built from these few operations.
-Later phases depend on them:
-  - cosine_similarity  -> RAG retrieval (Phase 07)
-  - softmax            -> how an LLM turns scores into next-token probabilities (Phase 05)
-  - pairwise_cosine    -> "find the most similar documents" in one matrix multiply
-
-RULES:
-  - dot_loop: plain Python only (no numpy). It's the slow baseline.
-  - everything else: numpy, NO Python for-loops. Use vectorized operations.
-
-Run tests:      uv run pytest 01-python-for-ai -k vectors
-Run benchmark:  uv run python 01-python-for-ai/vectors.py
-"""
+"""Phase 01 · Part A: vectors with numpy."""
 
 import time
 
@@ -20,65 +7,65 @@ import numpy as np
 
 
 def dot_loop(a: list[float], b: list[float]) -> float:
-    """Dot product with a plain Python for-loop: sum of a[i] * b[i].
+    """Calculate the dot product using plain Python."""
+    if len(a) != len(b):
+        raise ValueError("Vectors must have the same length.")
 
-    Raise ValueError if the lengths differ.
-    """
-    raise NotImplementedError
+    result = 0.0
+
+    for i in range(len(a)):
+        result += a[i] * b[i]
+
+    return result
 
 
 def dot_numpy(a: np.ndarray, b: np.ndarray) -> float:
-    """Same dot product, vectorized. One line. Return a Python float."""
-    raise NotImplementedError
+    """Calculate the dot product using NumPy."""
+    return float(np.dot(a, b))
 
 
 def normalize(x: np.ndarray) -> np.ndarray:
-    """Return x scaled to length 1 (divide by its L2 norm).
+    """Normalize a vector to unit length."""
+    norm = np.linalg.norm(x)
 
-    Raise ValueError for an all-zero vector (it has no direction).
-    Hint: np.linalg.norm
-    """
-    raise NotImplementedError
+    if norm == 0:
+        raise ValueError("Cannot normalize a zero vector.")
+
+    return x / norm
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    """Cosine of the angle between a and b, a float in [-1, 1].
+    """Calculate cosine similarity between two vectors."""
+    a_normalized = normalize(a)
+    b_normalized = normalize(b)
 
-        1.0  -> same direction (very similar meaning, for embeddings)
-        0.0  -> unrelated (orthogonal)
-       -1.0  -> opposite
-
-    Hint: reuse normalize + dot. Return a Python float.
-    """
-    raise NotImplementedError
+    return float(np.dot(a_normalized, b_normalized))
 
 
 def softmax(logits: np.ndarray) -> np.ndarray:
-    """Turn raw scores into probabilities that are all > 0 and sum to 1.
+    """Convert logits into probabilities."""
+    shifted = logits - np.max(logits)
 
-        softmax(x)_i = exp(x_i) / sum_j exp(x_j)
+    exponentials = np.exp(shifted)
 
-    Must be numerically stable: subtract max(logits) before exp,
-    otherwise np.exp(1000) overflows to inf and you get nan.
-    Works on a 1-D array.
-    """
-    raise NotImplementedError
+    return exponentials / np.sum(exponentials)
 
 
 def pairwise_cosine(matrix: np.ndarray) -> np.ndarray:
-    """Given an (n, d) matrix where each row is a vector, return the (n, n) matrix
-    of cosine similarities between every pair of rows.
+    """Calculate cosine similarity between all vector pairs."""
+    norms = np.linalg.norm(
+        matrix,
+        axis=1,
+        keepdims=True,
+    )
 
-    No loops. Hints:
-      - normalize every row at once: np.linalg.norm(matrix, axis=1, keepdims=True)
-      - then a single matrix multiply: unit @ unit.T
-    You may assume no row is all zeros.
-    """
-    raise NotImplementedError
+    normalized = matrix / norms
+
+    return normalized @ normalized.T
 
 
 def benchmark(n: int = 1_000_000) -> None:
-    """Time dot_loop vs dot_numpy on n-element vectors."""
+    """Compare Python and NumPy dot-product performance."""
     rng = np.random.default_rng(0)
     a, b = rng.random(n), rng.random(n)
     a_list, b_list = a.tolist(), b.tolist()
